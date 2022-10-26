@@ -1,47 +1,46 @@
-﻿using PatientManagementsystem.DAL;
+﻿using EmployeeManagementsystem.DAL;
 using PatientManagementsystem.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Razor.Tokenizer;
-using System.Web.Services.Description;
 
-namespace PatientManagementsystem.Controllers
+namespace EmployeeManagementsystem.Controllers
 {
-    public class PatientController : Controller
+    public class EmployeeController : Controller
     {
-        // GET: Patient
+        // GET: Employee
         public ActionResult Index()
         {
             return View();
         }
 
+
         // GET: /home/create
         [HttpGet]
-        public ActionResult CreatePatient()
+        public ActionResult CreateEmployee()
         {
             return View();
         }
         //GET: /home/create
         [HttpPost]
-        public ActionResult CreatePatient(Patient p)
+        public ActionResult CreateEmployee(Employee e)
         {
             bool result = false;
-            PatientDBHelper helper = new PatientDBHelper();
+            EmployeeDBHelper helper = new EmployeeDBHelper();
             try
             {
                 if (ModelState.IsValid)
                 {
-                    result = helper.CreatePatientDetails(p);
+                    result = helper.CreateEmployeeDetails(e);
                     ModelState.Clear();
-                  //return Json(result, JsonRequestBehavior.AllowGet);
+                    //return Json(result, JsonRequestBehavior.AllowGet);
                     return View("Index");
                 }
                 else
                     return View();
-            
+
             }
             catch (Exception ex)
             {
@@ -51,48 +50,48 @@ namespace PatientManagementsystem.Controllers
         }
 
         //Get :
-        
-        public ActionResult GetAll()
+
+        public ActionResult GetAllEmployee()
         {
 
             try
             {
-                PatientDBHelper helper = new PatientDBHelper();
-                List<Patient> patients = helper.GetAll();
-                return Json(new { data = patients }, JsonRequestBehavior.AllowGet);
+                EmployeeDBHelper DBhelper = new EmployeeDBHelper();
+                List<Employee> Employees = DBhelper.GetAllEmployees();
+                return Json(new { data = Employees }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 string str = ex.Message;
                 return View();
             }
-            
+
         }
 
         public ActionResult Edit(int id)
         {
-            PatientDBHelper objDBHandle = new PatientDBHelper();
-            Patient objPatient = new Patient();
-            
-            var pat = objDBHandle.GetPatientById(id);
+            EmployeeDBHelper objDBHandle = new EmployeeDBHelper();
+            Employee objEmployee = new Employee();
 
-            
+            var pat = objDBHandle.GetEmployeeById(id);
+
+
             return View("Edit", pat);
 
         }
 
-        // POST: Patient/Edit/5
+        // POST: Employee/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, Patient objPatient)
+        public ActionResult Edit(int id, Employee objEmployee)
         {
             try
             {
-               
+
                 if (ModelState.IsValid)
                 {
 
-                    PatientDBHelper objDBHandle = new PatientDBHelper();
-                    objDBHandle.UpdatePatient(objPatient);
+                    EmployeeDBHelper objDBHandle = new EmployeeDBHelper();
+                    objDBHandle.UpdateEmployee(objEmployee);
                     return RedirectToAction("Index");
                 }
                 else
@@ -115,21 +114,21 @@ namespace PatientManagementsystem.Controllers
 
         public ActionResult Delete(int id)
         {
-           
-                PatientDBHelper helper = new PatientDBHelper();
-                Patient objPatient = helper.GetPatientById(id);
-                return View("Delete", objPatient);
+
+            EmployeeDBHelper helper = new EmployeeDBHelper();
+            Employee objEmployee = helper.GetEmployeeById(id);
+            return View("Delete", objEmployee);
 
         }
 
 
         [HttpPost]
-        public ActionResult Delete(int id, Patient patient)
+        public ActionResult Delete(int id, Employee Employee)
         {
             bool result = false;
             try
             {
-                PatientDBHelper objDBHandle = new PatientDBHelper();
+                EmployeeDBHelper objDBHandle = new EmployeeDBHelper();
                 result = objDBHandle.DeleteData(id);
             }
             catch (Exception ex)
@@ -140,5 +139,6 @@ namespace PatientManagementsystem.Controllers
         }
 
     }
+
 
 }

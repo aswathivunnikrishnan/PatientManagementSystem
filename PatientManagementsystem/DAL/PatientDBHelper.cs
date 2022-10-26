@@ -5,6 +5,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Helpers;
+using System.Xml.Linq;
 
 namespace PatientManagementsystem.DAL
 {
@@ -24,12 +26,12 @@ namespace PatientManagementsystem.DAL
                 CommandType = CommandType.StoredProcedure
             };
 
-            cmd.Parameters.AddWithValue("@Patient_id", obj.Patient_id);
-            cmd.Parameters.AddWithValue("@Patient_FName", obj.FName);
-            cmd.Parameters.AddWithValue("@Patient_lName", obj.LName);
-            cmd.Parameters.AddWithValue("@Patient_Gender", obj.Patient_Gender);
-            cmd.Parameters.AddWithValue("@Patient_Age", obj.Patient_Age);
-            cmd.Parameters.AddWithValue("@Patient_Address", obj.Patient_Address);
+            cmd.Parameters.AddWithValue("@Patient_id", obj.Patient_Id);
+            cmd.Parameters.AddWithValue("@Patient_FName", obj.FirstName);
+            cmd.Parameters.AddWithValue("@Patient_lName", obj.LastName);
+            cmd.Parameters.AddWithValue("@Patient_Gender", obj.Gender);
+            cmd.Parameters.AddWithValue("@Patient_Age", obj.Age);
+            cmd.Parameters.AddWithValue("@Patient_Address", obj.Address);
             cmd.Parameters.AddWithValue("@PhoneNumber", obj.PhoneNumber);
             cmd.Parameters.AddWithValue("@Email", obj.Email);
             cmd.Parameters.AddWithValue("@DeletedStatus", 1);
@@ -65,14 +67,14 @@ namespace PatientManagementsystem.DAL
                     PatientList.Add(
                         new Patient
                         {
-                            Patient_id = Convert.ToInt32(dr["Id"]),
-                            FName = Convert.ToString(dr["Name"]),
-                            LName = Convert.ToString(dr["LastName"]),
-                            Patient_Gender = Convert.ToString(dr["Age"]),
-                            Patient_Age = Convert.ToInt32(dr["Gender"]),
-                            Patient_Address = Convert.ToString(dr["dateTime"]),
-                            PhoneNumber = Convert.ToInt32(dr["InPatient"]),
-                            Email = Convert.ToString(dr["Created_by"]),
+                            Patient_Id = Convert.ToInt32(dr["Patient_id"]),
+                            FirstName = Convert.ToString(dr["Patient_FName"]),
+                            LastName = Convert.ToString(dr["Patient_LName"]),
+                            Gender = Convert.ToString(dr["Patient_Gender"]),
+                            Age = Convert.ToInt32(dr["Patient_Age"]),
+                            Address = Convert.ToString(dr["Patient_Address"]),
+                            PhoneNumber = Convert.ToString(dr["PhoneNumber"]),
+                            Email = Convert.ToString(dr["Email"]),
                             
 
                         });
@@ -84,5 +86,93 @@ namespace PatientManagementsystem.DAL
             }
             return PatientList;
         }
+
+
+        public Patient GetPatientById(int id)
+        {
+            Connection();
+            Patient Patient = new Patient();
+
+            SqlCommand cmd = new SqlCommand("GetById", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Patient_id", id);
+            SqlDataAdapter sd = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+
+            con.Open();
+            sd.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                Patient.Patient_Id = Convert.ToInt32(dt.Rows[0]["Patient_Id"]);
+                Patient.FirstName = Convert.ToString(dt.Rows[0]["Patient_FName"]);
+                Patient.LastName = Convert.ToString(dt.Rows[0]["Patient_LName"]);
+                Patient.Gender = Convert.ToString(dt.Rows[0]["Patient_Gender"]);
+                Patient.Age = Convert.ToInt32(dt.Rows[0]["Patient_Age"]);
+                Patient.Address = Convert.ToString(dt.Rows[0]["Patient_Address"]);
+                Patient.PhoneNumber = Convert.ToString(dt.Rows[0]["PhoneNumber"]);
+                Patient.Email = Convert.ToString(dt.Rows[0]["Email"]);
+                dt.Clear();
+            }
+            else
+            {
+                return null;
+            }
+            con.Close();
+            return Patient;
+        }
+
+        //To Update Patient details    
+        public bool UpdatePatient(Patient obj)
+        {
+
+            Connection();
+            SqlCommand com = new SqlCommand("UpdatePatient", con);
+
+            com.CommandType = CommandType.StoredProcedure;
+            com.Parameters.AddWithValue("@Patient_id", obj.Patient_Id);
+            com.Parameters.AddWithValue("@Patient_FName", obj.FirstName);
+            com.Parameters.AddWithValue("@Patient_LName", obj.LastName);
+            com.Parameters.AddWithValue("@Patient_Gender", obj.Gender);
+            com.Parameters.AddWithValue("@Patient_Age", obj.Age);
+            com.Parameters.AddWithValue("@Patient_Address", obj.Address);
+            com.Parameters.AddWithValue("@PhoneNumber", obj.PhoneNumber);
+            com.Parameters.AddWithValue("@Email", obj.Email);
+            com.Parameters.AddWithValue("@DeletedStatus", 1);
+
+
+            con.Open();
+            int i = com.ExecuteNonQuery();
+            con.Close();
+            if (i >= 1)
+            {
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool DeleteData(int id)
+        {
+            Connection();
+            SqlCommand cmd = new SqlCommand("DeletePatient", con)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+
+            cmd.Parameters.AddWithValue("@Patient_id", id);
+
+            con.Open();
+            int i = cmd.ExecuteNonQuery();
+            con.Close();
+
+            if (i >= 1)
+                return true;
+            else
+                return false;
+        }
     }
+
 }

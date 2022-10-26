@@ -6,10 +6,10 @@ using System.Web;
 
 namespace PatientManagementsystem.Models
 {
-    public class Patient
+    public class Employee
     {
         [Required]
-        public int Patient_Id { get; set; }
+        public int EmployeeId { get; set; }
 
         [Required(ErrorMessage = "First Name is required")]
         [RegularExpression("[A-Za-z ]{1,30}", ErrorMessage = "Give a proper First name")]
@@ -22,22 +22,29 @@ namespace PatientManagementsystem.Models
         [Required(ErrorMessage = "Gender is required")]
         public string Gender { get; set; }
 
-        [Required(ErrorMessage = "Age is required")]
-        [Range(0, 120, ErrorMessage = "Not valid")]
-        public int Age { get; set; }
+
+        [Required(ErrorMessage = "Phone number is required")]
+        public string PhoneNumber { get; set; }
 
         [Required]
         public string Address { get; set; }
 
-        [Required(ErrorMessage = "Phone number is required")]
-        [RegularExpression("^(\\+91[\\-\\s]?)?[0]?(91)?[789]\\d{9}$", ErrorMessage = "Give a proper Phone Number")]
-        public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]
-        [RegularExpression("^[a-z0-9](\\.?[a-z0-9]){5,}@g(oogle)?mail\\.com$", ErrorMessage = "Give a proper Email Id")]
-        public string Email { get; set; }
+        [Required(ErrorMessage = "Department is required")]
+        public string Department { get; set; }
+
 
         [Required]
-        public int DeletedStatus { get; set; }
+        public DateTime DOJ { get; set; }
+
+
+        [Required]
+        public string Designation { get; set; }
+
+        [Required]
+        public int isactive { get; set; }
+
+        [Required]
+        public string Password { get; set; }
     }
 }

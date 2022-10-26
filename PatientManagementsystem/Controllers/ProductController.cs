@@ -5,43 +5,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Razor.Tokenizer;
-using System.Web.Services.Description;
 
 namespace PatientManagementsystem.Controllers
 {
-    public class PatientController : Controller
+    public class ProductController : Controller
     {
-        // GET: Patient
+        // GET: Product
         public ActionResult Index()
         {
             return View();
         }
-
         // GET: /home/create
         [HttpGet]
-        public ActionResult CreatePatient()
+        public ActionResult CreateProduct()
         {
             return View();
         }
         //GET: /home/create
         [HttpPost]
-        public ActionResult CreatePatient(Patient p)
+        public ActionResult CreateProduct(Product p)
         {
             bool result = false;
-            PatientDBHelper helper = new PatientDBHelper();
+            ProductDBHelper helper = new ProductDBHelper();
             try
             {
                 if (ModelState.IsValid)
                 {
-                    result = helper.CreatePatientDetails(p);
+                    result = helper.CreateProductDetails(p);
                     ModelState.Clear();
-                  //return Json(result, JsonRequestBehavior.AllowGet);
+                    //return Json(result, JsonRequestBehavior.AllowGet);
                     return View("Index");
                 }
                 else
                     return View();
-            
+
             }
             catch (Exception ex)
             {
@@ -51,48 +48,48 @@ namespace PatientManagementsystem.Controllers
         }
 
         //Get :
-        
+
         public ActionResult GetAll()
         {
 
             try
             {
-                PatientDBHelper helper = new PatientDBHelper();
-                List<Patient> patients = helper.GetAll();
-                return Json(new { data = patients }, JsonRequestBehavior.AllowGet);
+                ProductDBHelper helper = new ProductDBHelper();
+                List<Product> Products = helper.GetAllProduct();
+                return Json(new { data = Products }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 string str = ex.Message;
                 return View();
             }
-            
+
         }
 
         public ActionResult Edit(int id)
         {
-            PatientDBHelper objDBHandle = new PatientDBHelper();
-            Patient objPatient = new Patient();
-            
-            var pat = objDBHandle.GetPatientById(id);
+            ProductDBHelper objDBHandle = new ProductDBHelper();
+            Product objProduct = new Product();
 
-            
+            var pat = objDBHandle.GetProductById(id);
+
+
             return View("Edit", pat);
 
         }
 
-        // POST: Patient/Edit/5
+        // POST: Product/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, Patient objPatient)
+        public ActionResult Edit(int id, Product objProduct)
         {
             try
             {
-               
+
                 if (ModelState.IsValid)
                 {
 
-                    PatientDBHelper objDBHandle = new PatientDBHelper();
-                    objDBHandle.UpdatePatient(objPatient);
+                    ProductDBHelper objDBHandle = new ProductDBHelper();
+                    objDBHandle.UpdateProduct(objProduct);
                     return RedirectToAction("Index");
                 }
                 else
@@ -111,34 +108,5 @@ namespace PatientManagementsystem.Controllers
                 ViewData["Final"] = "Final excecuted!";
             }
         }
-
-
-        public ActionResult Delete(int id)
-        {
-           
-                PatientDBHelper helper = new PatientDBHelper();
-                Patient objPatient = helper.GetPatientById(id);
-                return View("Delete", objPatient);
-
-        }
-
-
-        [HttpPost]
-        public ActionResult Delete(int id, Patient patient)
-        {
-            bool result = false;
-            try
-            {
-                PatientDBHelper objDBHandle = new PatientDBHelper();
-                result = objDBHandle.DeleteData(id);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return RedirectToAction("Index");
-        }
-
     }
-
 }
